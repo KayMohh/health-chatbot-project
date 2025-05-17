@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from langchain.chains import RetrievalQA
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+# from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from langchain_community.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
 import torch
@@ -23,8 +24,11 @@ app.add_middleware(
 
 # Load small LLM (example: TinyLlama)
 model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+#  for seq2seqlm model
+# model_name = "google/flan-t5-small"    
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+# model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
 
 # Set up HuggingFace pipeline
 pipeline = pipeline("text2text-generation", model=model, tokenizer=tokenizer, max_length=150)
